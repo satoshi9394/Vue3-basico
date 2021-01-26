@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hola mundo</title>
+</head>
+<body>
+  <div id="app">
+    <span a-text="msg"></span>
+    <br>
+    <input type="text" a-model="msg">
+    <img p-bind="src:image">
+  </div>
+  <script src="./miniVue.js"></script>
+  <script>
+    const { createApp } = MiniVue;
+    const app = createApp({
+      data() {
+        return {
+          msg: 'hola MiniVue angel',
+          image: "https://www.manejandodatos.es/wp-content/uploads/2018/02/vueJS.png"
+        }
+      }
+    });
+    app.mount();
+  </script>
+</body>
+</html>
