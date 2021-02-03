@@ -95,7 +95,6 @@
       methods: {
         applyDiscount(event) {
           const disconuntIndex = this.discountCodes.indexOf(event.target.value);
-          console.log('valor de disconuntIndex: ',disconuntIndex);
           if(disconuntIndex >= 0) {
             this.product.price *= 50 / 100
             this.discountCodes.splice(disconuntIndex, 1);
