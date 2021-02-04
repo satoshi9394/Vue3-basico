@@ -18,11 +18,29 @@ app.component('product', {
     <section class="description">
       <h4>{{ product.name.toUpperCase() }} {{ product.stock === 0 ? "😢" : "😎" }}</h4>
       <badge :product="product"></badge>
-      <p class="description__status" v-if="product.stock === 3"> Quedan pocas unidades!</p>
-      <p class="description__status" v-else-if="product.stock === 2"> El producto esta por terminarse!</p>
-      <p class="description__status" v-else-if="product.stock === 1">Ultima unidad disponible</p>
-      <p class="description__price"> $ {{ new Intl.NumberFormat('es-MX').format(product.price) }} </p>
-      <p class="description__content"> {{product.content }} </p>
+      <p class="description__status" 
+        v-if="product.stock === 3"
+      > 
+        Quedan pocas unidades!
+      </p>
+      <p class="description__status" 
+        v-else-if="product.stock === 2"
+      > 
+        El producto esta por terminarse!
+      </p>
+      <p class="description__status" 
+        v-else-if="product.stock === 1"
+      >
+        Ultima unidad disponible
+      </p>
+      <p class="description__price"
+        :style="{ color: price_color }"
+      > 
+        $ {{ new Intl.NumberFormat('es-MX').format(product.price) }} 
+      </p>
+      <p class="description__content">
+        {{product.content }} 
+      </p>
       <div class="discount">
         <span>Codigo de Descuento</span>
         <input 
@@ -44,7 +62,8 @@ app.component('product', {
   data() {
     return{
       activeImages: 0,
-      discountCodes: ['platzi20', 'iosamuel']
+      discountCodes: ['platzi20', 'iosamuel'],
+      price_color: "rgb(104, 104, 209)"
     }
   },
   methods: {
@@ -57,6 +76,16 @@ app.component('product', {
     },
     sendToCart() {
       this.$emit('sendtocart', this.product);
+    }
+  },
+  watch: {
+    activeImages(value, oldValue) {
+      console.info(`valor antiguo: ${oldValue}, valor nuevo: ${value}`);
+    },
+    'product.stock'(stock) {
+      if ( stock <= 1) {
+        this.price_color = "rgb(188, 30, 67)";
+      }
     }
   }
 })
