@@ -26,9 +26,11 @@
       </div>
     </header>
     <main>
-      <product></product>
-      <product></product>
-      <product></product>
+      <product 
+        v-for="product in products"
+        :key="product.name"
+        :product="product"
+      ></product>
     </main>
   </div>
   <script src="https://unpkg.com/vue@next"></script>
@@ -37,6 +39,74 @@
     const app = createApp({
       data() {
         return {
+          products: [
+            {
+              name: 'Camara',
+              price: 450_000,
+              stock: 5,
+              content: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Corrupti commodi labore voluptates laborum similique
+                perferendis ad delectus doloremque autem, placeat et quos asperiores
+                fuga eos nemo itaque debitis.`,
+              images: [
+                {
+                  image: './images/camara.jpg',
+                  thumbnail: './images/camara-thumb.jpg'
+                },
+                {
+                  image: './images/camara-2.jpg',
+                  thumbnail: './images/camara-2-thumb.jpg'
+                }
+              ],
+              new: true,
+              offer: false,
+              quantity: 1
+            },
+            {
+              name: 'Camara PL1',
+              price: 150_000,
+              stock: 8,
+              content: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Corrupti commodi labore voluptates laborum similique
+                perferendis ad delectus doloremque autem, placeat et quos asperiores
+                fuga eos nemo itaque debitis.`,
+              images: [
+                {
+                  image: './images/camara.jpg',
+                  thumbnail: './images/camara-thumb.jpg'
+                },
+                {
+                  image: './images/camara-2.jpg',
+                  thumbnail: './images/camara-2-thumb.jpg'
+                }
+              ],
+              new: true,
+              offer: false,
+              quantity: 1
+            },
+            {
+              name: 'Camara PL2',
+              price: 650_000,
+              stock: 2,
+              content: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Corrupti commodi labore voluptates laborum similique
+                perferendis ad delectus doloremque autem, placeat et quos asperiores
+                fuga eos nemo itaque debitis.`,
+              images: [
+                {
+                  image: './images/camara.jpg',
+                  thumbnail: './images/camara-thumb.jpg'
+                },
+                {
+                  image: './images/camara-2.jpg',
+                  thumbnail: './images/camara-2-thumb.jpg'
+                }
+              ],
+              new: true,
+              offer: false,
+              quantity: 1
+            }
+          ],
           cartOpen: true,
           cart: [],
         }

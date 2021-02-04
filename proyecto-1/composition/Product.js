@@ -1,5 +1,5 @@
 app.component('product', {
-  template: /* vue-html */ `
+  template: /*vue-html*/`
     <section class="product">
       <div class="product__thumbnails">
         <div 
@@ -32,28 +32,36 @@ app.component('product', {
     </section>
   `,
   props: ['product'],
-  data() {
-    return{
-      activeImages: 0,
-      discountCodes: ['platzi20', 'iosamuel']
-    }
-  },
-  methods: {
-    applyDiscount(event) {
-      const disconuntIndex = this.discountCodes.indexOf(event.target.value);
-      if(disconuntIndex >= 0) {
-        this.product.price *= 50 / 100
-        this.discountCodes.splice(disconuntIndex, 1);
-      }
-    },
-    addToCart() {
-      const prodIndex = this.cart.findIndex( prod => prod.name === this.product.name);
+  setup(props) {
+    const productState = reactive({
+      activeImages: 0
+    });
+    function addToCart() {
+      const [ product ] = props;
+      const { cart } = cartState;
+      const prodIndex = cart.findIndex( prod => prod.name === product.name);
       if (prodIndex >= 0) {
-        this.cart[prodIndex].quantity += 1;
+        cart[prodIndex].quantity += 1;
       } else {
-        this.cart.push(this.product);
+        cart.push(product);
       }
-      this.product.stock -= 1;
+      product.stock -= 1;
+    }
+
+    const discountCodes = ref(['platzi20', 'iosamuel']);
+    function applyDiscount(event) {
+      const [ product ] = props;
+      const disconuntIndex = discountCodes.value.indexOf(event.target.value);
+      if(disconuntIndex >= 0) {
+        product.price *= 50 / 100
+        discountCodes.value.splice(disconuntIndex, 1);
+      }
+    }
+
+    return {
+      ...toRefs(productState),
+      addToCart,
+      applyDiscount
     }
   }
 })
