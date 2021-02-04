@@ -25,31 +25,31 @@ app.component('product', {
       <p class="description__content"> {{product.content }} </p>
       <div class="discount">
         <span>Codigo de Descuento</span>
-        <input type="text" placeholder="Ingresa tu codigo" @keyup.enter="applyDiscount($event)" >
+        <input 
+          type="text" 
+          placeholder="Ingresa tu codigo" 
+          @keyup.enter="applyDiscount($event)" 
+        >
       </div>
-      <button :disabled="product.stock === 0" @click="addToCart()">Agregar al carrito</button>
+      <button 
+        :disabled="product.stock === 0" 
+        @click="sendToCart()"
+      >
+        Agregar al carrito
+      </button>
     </section>
   `,
   props: ['product'],
-  setup(props) {
+  emits: ['sendtocart'],
+  setup(props, { emit }) {
+    const { product } = props;
+
     const productState = reactive({
       activeImages: 0
     });
-    function addToCart() {
-      const [ product ] = props;
-      const { cart } = cartState;
-      const prodIndex = cart.findIndex( prod => prod.name === product.name);
-      if (prodIndex >= 0) {
-        cart[prodIndex].quantity += 1;
-      } else {
-        cart.push(product);
-      }
-      product.stock -= 1;
-    }
 
     const discountCodes = ref(['platzi20', 'iosamuel']);
     function applyDiscount(event) {
-      const [ product ] = props;
       const disconuntIndex = discountCodes.value.indexOf(event.target.value);
       if(disconuntIndex >= 0) {
         product.price *= 50 / 100
@@ -57,9 +57,13 @@ app.component('product', {
       }
     }
 
+    function sendToCart() {
+      emit('sendtocart', product)
+    }
+
     return {
       ...toRefs(productState),
-      addToCart,
+      sendToCart,
       applyDiscount
     }
   }
