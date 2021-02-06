@@ -63,7 +63,7 @@ app.component('product', {
     return{
       activeImages: 0,
       discountCodes: ['platzi20', 'iosamuel'],
-      price_color: "rgb(104, 104, 209)"
+      // price_color: "rgb(104, 104, 209)"
     }
   },
   methods: {
@@ -81,11 +81,19 @@ app.component('product', {
   watch: {
     activeImages(value, oldValue) {
       console.info(`valor antiguo: ${oldValue}, valor nuevo: ${value}`);
-    },
+    }/*,
     'product.stock'(stock) {
       if ( stock <= 1) {
         this.price_color = "rgb(188, 30, 67)";
       }
+    }*/
+  },
+  computed: {
+    price_color() {
+      const colorRojo = "rgb(104, 104, 209)";
+      const colorAzul = "rgb(188, 30, 67)";
+      const isLessThanTwo = this.product.stock <= 1;
+      return isLessThanTwo ? colorAzul : colorRojo;
     }
   }
 })
