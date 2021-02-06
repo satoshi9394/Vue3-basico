@@ -18,11 +18,29 @@ app.component('product', {
     <section class="description">
       <h4>{{ product.name.toUpperCase() }} {{ product.stock === 0 ? "😢" : "😎" }}</h4>
       <badge :product="product"></badge>
-      <p class="description__status" v-if="product.stock === 3"> Quedan pocas unidades!</p>
-      <p class="description__status" v-else-if="product.stock === 2"> El producto esta por terminarse!</p>
-      <p class="description__status" v-else-if="product.stock === 1">Ultima unidad disponible</p>
-      <p class="description__price"> $ {{ new Intl.NumberFormat('es-MX').format(product.price) }} </p>
-      <p class="description__content"> {{product.content }} </p>
+      <p class="description__status" 
+        v-if="product.stock === 3"
+      > 
+        Quedan pocas unidades!
+      </p>
+      <p class="description__status"
+        v-else-if="product.stock === 2"
+      > 
+        El producto esta por terminarse!
+      </p>
+      <p class="description__status" 
+        v-else-if="product.stock === 1"
+      >
+        Ultima unidad disponible
+      </p>
+      <p class="description__price"
+        :style="{ color: price_color }"
+      > 
+        $ {{ new Intl.NumberFormat('es-MX').format(product.price) }} 
+      </p>
+      <p class="description__content"> 
+        {{product.content }} 
+      </p>
       <div class="discount">
         <span>Codigo de Descuento</span>
         <input 
@@ -45,7 +63,8 @@ app.component('product', {
     const { product } = props;
 
     const productState = reactive({
-      activeImages: 0
+      activeImages: 0,
+      price_color: "rgb(104, 104, 209)"
     });
 
     const discountCodes = ref(['platzi20', 'iosamuel']);
@@ -60,6 +79,20 @@ app.component('product', {
     function sendToCart() {
       emit('sendtocart', product)
     }
+    // necesita una referencia y no una propiedad reactiva por lo que se necesita crear para el watch 
+    // esta rejecucion de la propiedad
+    watch( () => productState.activeImages, 
+      (val, oldVal) => {
+        console.log(`valor actual: ${val}, valor antiguo: ${oldVal}`);
+    });
+
+    watch( () => product.stock, 
+      (stock) => {
+        if ( stock <= 1 ) {
+          productState.price_color = "rgb( 188, 30, 67)"
+        }
+      }
+    )
 
     return {
       ...toRefs(productState),
