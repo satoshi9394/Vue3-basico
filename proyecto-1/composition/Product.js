@@ -64,8 +64,23 @@ app.component('product', {
 
     const productState = reactive({
       activeImages: 0,
-      price_color: "rgb(104, 104, 209)"
+      price_color: computed( () => {
+        const colorRojo = "rgb(104, 104, 209)";
+        const colorAzul = "rgb(188, 30, 67)";
+        const isLessThanTwo = product.stock <= 1;
+        return isLessThanTwo ? colorAzul : colorRojo;
+      })
+      // price_color: "rgb(104, 104, 209)"
     });
+    
+    /* una forma de hacerlo 
+    const price_color = computed( () => {
+      const colorRojo = "rgb(104, 104, 209)";
+      const colorAzul = "rgb(188, 30, 67)";
+      const isLessThanTwo = product.stock <= 1;
+      return isLessThanTwo ? colorAzul : colorRojo;
+    });
+    */
 
     const discountCodes = ref(['platzi20', 'iosamuel']);
     function applyDiscount(event) {
@@ -85,17 +100,18 @@ app.component('product', {
       (val, oldVal) => {
         console.log(`valor actual: ${val}, valor antiguo: ${oldVal}`);
     });
-
+    /*
     watch( () => product.stock, 
       (stock) => {
         if ( stock <= 1 ) {
           productState.price_color = "rgb( 188, 30, 67)"
         }
       }
-    )
+    )*/
 
     return {
       ...toRefs(productState),
+      // price_color,
       sendToCart,
       applyDiscount
     }
