@@ -38,78 +38,10 @@
   </div>
   <script src="https://unpkg.com/vue@next"></script>
   <script>
-    const { createApp, ref, reactive, toRefs, watch, computed } = Vue;
+    const { createApp, ref, reactive, toRefs, watch, computed, onMounted } = Vue;
     const app = createApp({
       setup() {
-        const products = ref([
-          {
-            name: 'Camara',
-            price: 450_000,
-            stock: 3,
-            content: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Corrupti commodi labore voluptates laborum similique
-              perferendis ad delectus doloremque autem, placeat et quos asperiores
-              fuga eos nemo itaque debitis.`,
-            images: [
-              {
-                image: './images/camara.jpg',
-                thumbnail: './images/camara-thumb.jpg'
-              },
-              {
-                image: './images/camara-2.jpg',
-                thumbnail: './images/camara-2-thumb.jpg'
-              }
-            ],
-            new: true,
-            offer: false,
-            quantity: 1
-          },
-          {
-            name: 'Camara PL1',
-            price: 250_000,
-            stock: 5,
-            content: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Corrupti commodi labore voluptates laborum similique
-              perferendis ad delectus doloremque autem, placeat et quos asperiores
-              fuga eos nemo itaque debitis.`,
-            images: [
-              {
-                image: './images/camara.jpg',
-                thumbnail: './images/camara-thumb.jpg'
-              },
-              {
-                image: './images/camara-2.jpg',
-                thumbnail: './images/camara-2-thumb.jpg'
-              }
-            ],
-            new: true,
-            offer: true,
-            quantity: 1
-          },
-          {
-            name: 'Camara pl2',
-            price: 650_000,
-            stock: 8,
-            content: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Corrupti commodi labore voluptates laborum similique
-              perferendis ad delectus doloremque autem, placeat et quos asperiores
-              fuga eos nemo itaque debitis.`,
-            images: [
-              {
-                image: './images/camara.jpg',
-                thumbnail: './images/camara-thumb.jpg'
-              },
-              {
-                image: './images/camara-2.jpg',
-                thumbnail: './images/camara-2-thumb.jpg'
-              }
-            ],
-            new: false,
-            offer: true,
-            quantity: 1
-          }
-        ]);
-
+        const products = ref([]);
         const cartState = reactive({
           cartOpen: false,
           cart: [],
@@ -123,40 +55,56 @@
           //total: 0
         });
 
-      function addToCart(product) {
-        const { cart } = cartState;
-        const prodIndex = cart.findIndex( prod => prod.name === product.name);
-        if (prodIndex >= 0) {
-          cart[prodIndex].quantity += 1;
-        } else {
-          cart.push(product);
+        function addToCart(product) {
+          const { cart } = cartState;
+          const prodIndex = cart.findIndex( prod => prod.name === product.name);
+          if (prodIndex >= 0) {
+            cart[prodIndex].quantity += 1;
+          } else {
+            cart.push(product);
+          }
+          product.stock -= 1;
         }
-        product.stock -= 1;
-      }
 
-      /* otra forma de hacerlo
-      const total = computed( () => {
-        return cartState.cart.reduce( (prev, curr) => {
-          const prevPrice = prev.price || prev;
-          const prevQuantity = prev.quantity || 1;
-          return prevPrice * prevQuantity + curr.price * curr.quantity;
-        }, 0);
-      });
-      */
-
-      /*
-      watch( () => cartState.cart, 
-        (value, oldValue) => {
-          const { total, cart } = cartState;
-          total = cart.reduce( (prev, curr) => {
+        /* otra forma de hacerlo
+        const total = computed( () => {
+          return cartState.cart.reduce( (prev, curr) => {
             const prevPrice = prev.price || prev;
             const prevQuantity = prev.quantity || 1;
             return prevPrice * prevQuantity + curr.price * curr.quantity;
           }, 0);
-        }
-      )
-      */
+        });
+        */
 
+        /*
+        watch( () => cartState.cart, 
+          (value, oldValue) => {
+            const { total, cart } = cartState;
+            total = cart.reduce( (prev, curr) => {
+              const prevPrice = prev.price || prev;
+              const prevQuantity = prev.quantity || 1;
+              return prevPrice * prevQuantity + curr.price * curr.quantity;
+            }, 0);
+          }
+        )
+        */
+
+        onMounted(() => {
+          console.info('ciclo de vida mounted')
+        })
+        // setup() === created()
+        const getDataApi = async (content) => {
+          try {
+          const db = 'products';
+          const urlApi = `https://my-json-server.typicode.com/satoshi9394/demo-vue3-platzi/${db}`;
+          const response = await fetch(urlApi);
+          const data = await response.json()
+          content.value = data;
+          } catch (error) {
+            console.error(`Error: ${error}, msg: fallo la comunicacion con la api`)
+          }
+        };
+        getDataApi(products);
         return {
           ...toRefs(cartState),
           // total,
