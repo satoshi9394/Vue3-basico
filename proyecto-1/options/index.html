@@ -81,14 +81,16 @@
             }, 0);
         }
       },
-      created() {
-        const db = 'products';
-        const urlApi = `https://my-json-server.typicode.com/satoshi9394/demo/${db}`;
-        fetch(urlApi)
-          .then( res => res.json())
-          .then(data => {
-            this.products = data;
-          });
+      async created() {
+        try {
+          const db = 'products';
+          const urlApi = `https://my-json-server.typicode.com/satoshi9394/demo-vue3-platzi/${db}`;
+          const response = await fetch(urlApi);
+          const data = await response.json()
+          this.products = data
+        } catch (error) {
+          console.error(`Error: ${error}, msg: fallo la comunicacion con la api`)
+        }
       }
     });
   </script>
